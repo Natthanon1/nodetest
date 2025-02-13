@@ -37,17 +37,20 @@ app.get('/books/:id', (req, res) => {
     });
 });
 
-app.post('/books', (req, res) => {
+app.post('/books/:id', (req, res) => {
     const book = req.body;
-    db.run('INSERT INTO books (title, author) VALUES (?, ?)', book.title, book.author, function(err) {
+    const bookId = req.params.id;  
+
+    db.run('INSERT INTO books (id, title, author) VALUES (?, ?, ?)', bookId, book.title, book.author, function(err) {
         if (err) {
             res.status(500).send(err);
         } else {
-            book.id = this.lastID;
-            res.send(book);
+            book.id = bookId;  
+            res.send(book);  
         }
     });
 });
+
 
 app.put('/books/:id', (req, res) => {
     const book = req.body;
